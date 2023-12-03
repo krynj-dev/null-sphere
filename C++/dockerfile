@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/devcontainers/cpp:ubuntu
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Install necessary build tools and libraries
+RUN apt-get update && \
+    apt-get install -y g++ && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy the C++ source code files into the container
+ADD ./ ./
+
+# Compile the main.cpp file
+RUN g++ -Iinclude -o my_program src/main.cpp src/util.cpp src/day_1.cpp
+
+# Set the default command to run the compiled program
+CMD ["./my_program"]

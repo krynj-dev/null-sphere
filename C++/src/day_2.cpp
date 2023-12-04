@@ -26,7 +26,7 @@ void aoc23::day_2()
     {
         id_sum += stoi(split_string(*it, " ")[1]);
     }
-    cout << "Task 1: total is " << id_sum << endl;
+    cout << "\tTask 1: total is " << id_sum << endl;
     // Task 2
     std::map<std::string, std::map<std::string, int>> min_set = minimum_set(games);
     int power_sum = 0;
@@ -34,7 +34,7 @@ void aoc23::day_2()
     {
         power_sum += power(it->second);
     }
-    cout << "Task 2: total is " << power_sum << endl;
+    cout << "\tTask 2: total is " << power_sum << endl;
 }
 
 std::map<std::string, std::vector<std::map<std::string, int>>> parse_games(std::vector<std::string> lines)

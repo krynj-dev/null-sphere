@@ -16,6 +16,9 @@ void aoc23::run_day(int day) {
     case 2:
         day_2();    
         break;
+    case 3:
+        day_3();    
+        break;
     default:
         break;
     }
@@ -28,7 +31,7 @@ std::vector<std::string> aoc23::read_file(const std::string& filename) {
     if (file.is_open()) {
         std::string line;
         while (std::getline(file, line)) {
-            lines.push_back(line);
+            lines.push_back(line.substr(0, line.size()));
         }
 
         file.close();

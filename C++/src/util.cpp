@@ -14,6 +14,7 @@ void aoc23::run_day(int day) {
         day_1();
         break;
     case 2:
+        day_2();    
         break;
     default:
         break;
@@ -36,4 +37,18 @@ std::vector<std::string> aoc23::read_file(const std::string& filename) {
     }
 
     return lines;
+}
+
+std::vector<std::string> aoc23::split_string(std::string s, std::string delimiter) {
+    std::vector<std::string> words;
+    std::string s_cpy = s;
+    size_t pos = 0;
+    string token;
+    while ((pos = s_cpy.find(delimiter)) != std::string::npos) {
+        token = s_cpy.substr(0, pos);
+        s_cpy.erase(0, pos + delimiter.length());
+        words.push_back(token);
+    }
+    words.push_back(s_cpy);
+    return words;
 }

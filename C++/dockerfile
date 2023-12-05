@@ -11,8 +11,9 @@ RUN apt-get update && \
 # Copy the C++ source code files into the container
 ADD ./ ./
 
-# Compile the main.cpp file
-RUN g++ -Iinclude -o my_program src/main.cpp src/util.cpp src/day_1.cpp src/day_2.cpp src/day_3.cpp
+# Compile the program
+RUN make clean
+RUN make
  
 # Set the default command to run the compiled program
-CMD ["./my_program"]
+CMD ["./bin/advent_of_code"]

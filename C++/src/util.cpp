@@ -24,7 +24,7 @@ void aoc23::run_day(int day) {
     }
 }
 
-std::vector<std::string> aoc23::read_file(const std::string& filename) {
+std::vector<std::string> aoc23::read_file(const std::string& filename, const bool strip_newline) {
     std::vector<std::string> lines;
     std::ifstream file(filename);
 

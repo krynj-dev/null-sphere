@@ -4,213 +4,111 @@
 #include <cassert>
 #include <regex>
 
-struct PartNumber
-{
-    PartNumber(size_t pos, size_t len)
-    {
-        this->pos = pos;
-        this->len = len;
-    }
-
-public:
-    size_t pos;
-    size_t len;
-};
-
-
-vector<PartNumber> parse_schematic(std::vector<std::string> lines);
-pair<size_t, size_t> pos_to_coords(size_t pos, size_t width);
-size_t coords_to_pos(pair<int, int> coords, size_t width);
-size_t token_type(char token);
-void eval_symbol(pair<size_t, size_t> coords, std::vector<std::string> lines, vector<vector<size_t>> &aux,
-                 size_t column_length, size_t row_width, size_t last_type);
+size_t task_one_filter(const string &line, const char *, const size_t &offset);
+size_t task_two_filter(const string &line, const char *, const size_t &offset);
+vector<string> parse_schematic(std::vector<std::string> &lines, char *,
+                               size_t (*find_next_symbol)(const string &, const char *, const size_t &));
+void eval_symbol(const size_t x, const size_t y, const size_t row_width, const size_t column_length, 
+    std::vector<std::string> lines, vector<string> &part_numbers, vector<vector<size_t>> &aux);
 
 void aoc23::day_3()
 {
-    std::vector<std::string> lines = read_file("resources/input_3.txt");
+    std::vector<std::string> lines = read_file("resources/input_3.txt", true);
     // Strip newline
     for (size_t i = 0; i < lines.size(); i++)
     {
         lines[i] = lines[i].erase(lines[i].find_last_not_of("\r\n") + 1, lines[i].size());
     }
 
-    size_t line_len = lines[0].size();
-    for (vector<string>::iterator it = lines.begin(); it != lines.end(); ++it)
-    {
-        assert(it->size() == line_len);
-    }
+    char *non_symbols = "0123456789.";
+    vector<string> part_numbers = parse_schematic(lines, non_symbols, &task_one_filter);
 
-    vector<PartNumber> part_numbers = parse_schematic(lines);
-    // Task 1
+    // Get sum
     int total = 0;
-    for (PartNumber pn: part_numbers)
+    for (string s: part_numbers)
     {
-        pair<size_t, size_t> coords = pos_to_coords(pn.pos, lines[0].size());
-        total += stoi(lines[coords.second].substr(coords.first, pn.len));
+        total += stoi(s);
     }
     cout << "\tTask 1: total is " << total << endl;
+
+    // char* only_asterisk = "*";
+    // parse_schematic(lines, only_asterisk, &task_two_filter);
 }
 
-vector<PartNumber> parse_schematic(std::vector<std::string> lines)
+vector<string> parse_schematic(std::vector<std::string> &lines, char *symbol_set,
+                               size_t (*find_next_symbol)(const string &, const char *, const size_t &))
 {
-    vector<PartNumber> part_numbers;
+    vector<string> part_numbers;
 
+    size_t x;
     size_t row_width = lines[0].size();
     size_t column_length = lines.size();
 
-    vector<vector<size_t>> aux(column_length);
+    vector<vector<size_t>> aux(lines.size());
     for (size_t y = 0; y < aux.size(); y++)
     {
         aux[y] = vector<size_t>(row_width);
     }
 
-    size_t pos = 0;
-    size_t last_type = 0;
-    size_t num_len = 0;
-    bool is_part = false;
-
-    // Main loop
-    while (pos < row_width * column_length)
+    for (size_t y = 0; y < column_length; y++)
     {
-        pair<size_t, size_t> coords = pos_to_coords(pos, row_width);
-        char token = lines[coords.second][coords.first];
-        size_t cur_type = token_type(token);
-        // Skip if .
-        if (cur_type == 0)
+        std::string line = lines[y];
+        x = find_next_symbol(line, symbol_set, 0);
+        for (x; x != string::npos; x = find_next_symbol(line, symbol_set, x + 1))
         {
-            if (last_type == 1)
-            {
-            }
-            last_type = 0;
+            eval_symbol(x, y, row_width, column_length, lines, part_numbers, aux);
         }
-        // If token is digit 0-9
-        else if (cur_type == 1)
-        {
-            num_len += 1;
-            if (last_type == 2 || (last_type == 1 && is_part) || aux[coords.second][coords.first] == 1)
-            {
-                is_part = true;
-            }
-            else if (last_type == 1 && !is_part)
-            {
-                if (((coords.second != column_length - 1) && (coords.first != row_width - 1)) && (token_type(lines[coords.second + 1][coords.first + 1]) == 2))
-                {
-                    if (coords.first < row_width - 3)
-                    {
-                        aux[coords.second][coords.first + 2] = 1;
-                    }
-                    is_part = true;
-                }
-            }
-            else // New number, not previously marked as good. Most checking
-            {
-                if (coords.second != column_length - 1)
-                {
-                    if (coords.first != 0) // SW
-                    {
-                        pair<size_t, size_t> symbol_coords(coords.first - 1, coords.second + 1);
-                        if (token_type(lines[symbol_coords.second][symbol_coords.first]))
-                        {
-                            eval_symbol(symbol_coords, lines, aux, column_length, row_width, last_type);
-                            is_part = true;
-                        }
-                    }
-                    // S
-                    pair<size_t, size_t> symbol_coords(coords.first, coords.second + 1);
-                    if (token_type(lines[symbol_coords.second][symbol_coords.first]) == 2)
-                    {
-                        eval_symbol(symbol_coords, lines, aux, column_length, row_width, last_type);
-                        is_part = true;
-                    }
-                    if (coords.first != row_width - 1) // SE
-                    {
-                        pair<size_t, size_t> symbol_coords(coords.first + 1, coords.second + 1);
-                        if (token_type(lines[symbol_coords.second][symbol_coords.first]))
-                        {
-                            aux[coords.second][coords.first + 2] = 1;
-                            eval_symbol(symbol_coords, lines, aux, column_length, row_width, last_type);
-                            is_part = true;
-                        }
-                    }
-                }
-            }
-            last_type = 1;
-        }
-        // If token is symbol
-        else
-        {
-            if (last_type == 1)
-            {
-                is_part = true;
-            }
-            // Skip if already evaluated
-            if (aux[coords.second][coords.first] < 2)
-            {
-                eval_symbol(coords, lines, aux, column_length, row_width, last_type);
-            }
-            last_type = 2;
-        }
-
-        if (cur_type == 0 || cur_type == 2 || (coords.first == row_width - 1 && cur_type == 1))
-        {
-            int length_mod = (coords.first == row_width - 1 && cur_type == 1) ? 1 : 0;
-            if (is_part)
-            {
-                part_numbers.push_back(PartNumber(pos - num_len + length_mod, num_len));
-            }
-            // Reset number and token trackers
-            num_len = 0;
-            is_part = false;
-        }
-
-        pos++;
     }
 
     return part_numbers;
 }
 
-pair<size_t, size_t> pos_to_coords(size_t pos, size_t width)
+size_t task_one_filter(const string &line, const char *symbol_set, const size_t &offset)
 {
-    return make_pair(pos % width, pos / width);
+    return line.find_first_not_of(symbol_set, offset);
 }
 
-size_t coords_to_pos(pair<int, int> coords, size_t width)
+size_t task_two_filter(const string &line, const char *symbol_set, const size_t &offset)
 {
-    return coords.second * width + coords.first;
+    return line.find_first_of(symbol_set, offset);
 }
 
-size_t token_type(char token)
+void eval_symbol(const size_t x, const size_t y, const size_t row_width, const size_t column_length, 
+    std::vector<std::string> lines, vector<string> &part_numbers, vector<vector<size_t>> &aux)
 {
-    std::regex digit_regex("[0-9]");
+    size_t pos_x = max(0, int(x) - 1);
+    size_t pos_y = max(0, int(y) - 1);
+    size_t max_x = min(int(x) + 1, int(row_width) - 1);
+    size_t max_y = min(int(y) + 1, int(row_width) - 1);
+    string digits = "0123456789";
 
-    if (token == '.')
-        return 0;
-
-    if (std::regex_match(string(1, token), digit_regex))
-        return 1;
-
-    return 2;
-}
-
-void eval_symbol(pair<size_t, size_t> coords, std::vector<std::string> lines, vector<vector<size_t>> &aux,
-                 size_t column_length, size_t row_width, size_t last_type)
-{
-    // Set aux below and next to 1
-    if ((coords.second != column_length - 1) && (last_type != 2))
+    while (pos_y <= max_y)
     {
-        if (coords.first != 0)
+        while (pos_x <= max_x)
         {
-            aux[coords.second + 1][coords.first - 1] = 1;
+            if (aux[pos_y][pos_x] == 0)
+            {
+                string line = lines[pos_y];
+                if (digits.find(line[pos_x]) != string::npos) // is digit
+                {
+                    size_t i_start = pos_x;
+                    while (i_start - 1 >= 0 && digits.find(line[i_start-1]) != string::npos)
+                    {
+                        i_start--;
+                        aux[pos_y][i_start] = 1;
+                    }
+                    size_t i_end = pos_x;
+                    while (i_end + 1 < line.size() && digits.find(line[i_end+1]) != string::npos)
+                    {
+                        i_end++;
+                        aux[pos_y][i_end] = 1;
+                    }
+                    part_numbers.push_back(line.substr(i_start, i_end - i_start + 1));
+                }
+            }
+            pos_x++;
         }
-        aux[coords.second + 1][coords.first] = 1;
+        pos_x = max(0, int(x) - 1);
+        pos_y++;
     }
-    if (coords.first != row_width - 1)
-    {
-        aux[coords.second][coords.first + 1] = 1;
-    }
-    if ((coords.second != column_length - 1) && (coords.first != row_width - 1))
-    {
-        aux[coords.second + 1][coords.first + 1] = 1;
-    }
-    aux[coords.second][coords.first] = 2;
 }

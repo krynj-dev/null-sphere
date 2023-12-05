@@ -12,7 +12,7 @@ int number_from_first_last_digits(std::string digit_line);
 
 void aoc23::day_1()
 {
-    std::vector<std::string> lines = aoc23::read_file("resources/input_1.txt");
+    std::vector<std::string> lines = aoc23::read_file("resources/input_1.txt", false);
 
     int total_task_1 = get_total(lines, false);
 

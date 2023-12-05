@@ -14,7 +14,7 @@ int power(std::map<std::string, int> min_game);
 
 void aoc23::day_2()
 {
-    std::vector<std::string> lines = read_file("resources/input_2.txt");
+    std::vector<std::string> lines = read_file("resources/input_2.txt", false);
     map<string, vector<map<string, int>>> games = parse_games(lines);
     // Task 1
     map<string, int> limit({{"red", 12},

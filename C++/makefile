@@ -8,7 +8,7 @@ OBJDIR = obj
 BINDIR = bin
 
 # Source and object files
-SRC = $(wildcard $(SRCDIR)/*.cpp)
+SRC = $(wildcard $(SRCDIR)/*.cpp) $(wildcard $(SRCDIR)/*/*.cpp)
 OBJ = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 
 # Executable

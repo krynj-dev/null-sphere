@@ -10,7 +10,7 @@ using namespace aoc23;
 int main(int argc, char* argv[]) {
     cout << "ADVENT OF CODE 2023" << endl;
 
-    for (int i = 1; i < 6; i++) {
+    for (int i = 1; i < 10; i++) {
         run_day(i);
     }
 

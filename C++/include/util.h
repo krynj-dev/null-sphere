@@ -10,4 +10,6 @@ namespace aoc23
     std::vector<std::string> split_string(std::string s, std::string delimiter);
 
     void run_day(int day);
+
+    std::vector<long long> parse_numbers(std::string line);
 } 

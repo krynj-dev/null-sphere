@@ -47,9 +47,9 @@ vector<int> matching_numbers(string game_line)
     // Split numbers into scratched and winners
     vector<string> number_split = split_string(game_split[1], " |");
     // Get numbers that are had
-    vector<int> have_numbers = parse_numbers(number_split[1]);
+    vector<long long> have_numbers = aoc23::parse_numbers(number_split[1]);
     // Get winning numbers
-    vector<int> winning_numbers = parse_numbers(number_split[0]);
+    vector<long long> winning_numbers = aoc23::parse_numbers(number_split[0]);
     // Map winning numbers
     for (int n: winning_numbers)
     {
@@ -63,20 +63,6 @@ vector<int> matching_numbers(string game_line)
         }
     }
     return matching_numbers;
-}
-
-vector<int> parse_numbers(string par_line)
-{
-    vector<int> numbers;
-    std::regex nums(" {1,2}[0-9]{1,2}");
-    for(std::sregex_iterator i = std::sregex_iterator(par_line.begin(), par_line.end(), nums);
-                            i != std::sregex_iterator();
-                            ++i )
-    {
-        std::smatch m = *i;
-        numbers.push_back(stoi(m.str().substr(1)));
-    }
-    return numbers;
 }
 
 int score(vector<int> matching_numbers)

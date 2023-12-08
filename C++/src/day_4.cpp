@@ -1,9 +1,5 @@
 #include <advent.h>
 #include <util.h>
-#include <iostream>
-#include <map>
-#include <algorithm>
-#include <regex>
 
 using namespace std;
 using namespace aoc23;

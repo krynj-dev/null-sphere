@@ -1,9 +1,5 @@
 #include <advent.h>
 #include <util.h>
-#include <iostream>
-#include <cassert>
-#include <map>
-#include <regex>
 
 size_t task_one_filter(const string &line, const char *, const size_t &offset);
 size_t task_two_filter(const string &line, const char *, const size_t &offset);

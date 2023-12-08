@@ -1,10 +1,5 @@
 #include <advent.h>
 #include <util.h>
-#include <regex>
-#include <iostream>
-#include <tuple>
-#include <queue>
-#include <map>
 
 using namespace std;
 using namespace aoc23;

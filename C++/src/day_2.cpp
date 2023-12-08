@@ -1,7 +1,5 @@
 #include <advent.h>
 #include <util.h>
-#include <iostream>
-#include <map>
 
 using namespace std;
 using namespace aoc23;

@@ -1,8 +1,5 @@
 #include "advent.h"
 #include "util.h"
-#include <iostream>
-#include <sstream>
-#include <cstdlib>
 
 using namespace std;
 using namespace aoc23;

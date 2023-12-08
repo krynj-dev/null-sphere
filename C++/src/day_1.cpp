@@ -1,8 +1,5 @@
 #include <advent.h>
 #include <util.h>
-#include <iostream>
-#include <string>
-#include <regex>
 
 std::regex get_task_1_regex();
 std::regex get_task_2_regex();

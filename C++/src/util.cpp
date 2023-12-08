@@ -1,8 +1,5 @@
 #include "util.h"
 #include "advent.h"
-#include <iostream>
-#include <fstream>
-#include <regex>
 
 using namespace aoc23;
 using namespace std;

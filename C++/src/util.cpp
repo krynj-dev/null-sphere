@@ -30,6 +30,9 @@ void aoc23::run_day(int day)
     case 7:
         day_7();
         break;
+    case 8:
+        day_8();
+        break;
     default:
         break;
     }

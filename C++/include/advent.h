@@ -3,10 +3,11 @@
 #include <fstream>
 #include <iostream>
 #include <map>
-#include <print>
 #include <queue>
 #include <regex>
 #include <string>
+#include <stdio.h>
+#include <memory>
 #include <tuple>
 
 namespace aoc23

@@ -10,10 +10,11 @@ std::vector<string> valid_games(std::map<std::string, std::vector<std::map<std::
 std::map<std::string, std::map<std::string, int>> minimum_set(std::map<std::string, std::vector<std::map<std::string, int>>> games);
 int power(std::map<std::string, int> min_game);
 
-void aoc23::day_2()
+pair<long long, long long> aoc23::day_2()
 {
     std::vector<std::string> lines = read_file("resources/input_2.txt", false);
     map<string, vector<map<string, int>>> games = parse_games(lines);
+
     // Task 1
     map<string, int> limit({{"red", 12},
                             {"green", 13},
@@ -24,7 +25,7 @@ void aoc23::day_2()
     {
         id_sum += stoi(split_string(*it, " ")[1]);
     }
-    cout << "\tTask 1: total is " << id_sum << endl;
+
     // Task 2
     std::map<std::string, std::map<std::string, int>> min_set = minimum_set(games);
     int power_sum = 0;
@@ -32,7 +33,8 @@ void aoc23::day_2()
     {
         power_sum += power(it->second);
     }
-    cout << "\tTask 2: total is " << power_sum << endl;
+
+    return { id_sum, power_sum };
 }
 
 std::map<std::string, std::vector<std::map<std::string, int>>> parse_games(std::vector<std::string> lines)

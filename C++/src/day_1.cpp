@@ -1,23 +1,24 @@
 #include <advent.h>
 #include <util.h>
 
+using namespace std;
+using namespace aoc23;
+
 std::regex get_task_1_regex();
 std::regex get_task_2_regex();
 std::string digits_from_line(std::string line, bool include_written_numbers);
 int get_total(std::vector<string> lines, bool include_written_numbers);
 int number_from_first_last_digits(std::string digit_line);
 
-void aoc23::day_1()
+pair<long long, long long> aoc23::day_1()
 {
     std::vector<std::string> lines = aoc23::read_file("resources/input_1.txt", false);
 
     int total_task_1 = get_total(lines, false);
 
-    cout << "\tTask 1: total is " << total_task_1 << endl;
-
     int total_task_2 = get_total(lines, true);
 
-    cout << "\tTask 2: total is " << total_task_2 << endl;
+    return { total_task_1, total_task_2 };
 }
 
 std::string digits_from_line(std::string line, bool include_written_numbers)

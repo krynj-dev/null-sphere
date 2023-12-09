@@ -12,29 +12,29 @@
 
 namespace aoc23
 {
-    void day_1();
-    void day_2();
-    void day_3();
-    void day_4();
-    void day_5();
-    void day_6();
-    void day_7();
-    void day_8();
-    void day_9();
-    void day_10();
-    void day_11();
-    void day_12();
-    void day_13();
-    void day_14();
-    void day_15();
-    void day_16();
-    void day_17();
-    void day_18();
-    void day_19();
-    void day_20();
-    void day_21();
-    void day_22();
-    void day_23();
-    void day_24();
-    void day_25();
+    std::pair<long long, long long> day_1();
+    std::pair<long long, long long> day_2();
+    std::pair<long long, long long> day_3();
+    std::pair<long long, long long> day_4();
+    std::pair<long long, long long> day_5();
+    std::pair<long long, long long> day_6();
+    std::pair<long long, long long> day_7();
+    std::pair<long long, long long> day_8();
+    std::pair<long long, long long> day_9();
+    std::pair<long long, long long> day_10();
+    std::pair<long long, long long> day_11();
+    std::pair<long long, long long> day_12();
+    std::pair<long long, long long> day_13();
+    std::pair<long long, long long> day_14();
+    std::pair<long long, long long> day_15();
+    std::pair<long long, long long> day_16();
+    std::pair<long long, long long> day_17();
+    std::pair<long long, long long> day_18();
+    std::pair<long long, long long> day_19();
+    std::pair<long long, long long> day_20();
+    std::pair<long long, long long> day_21();
+    std::pair<long long, long long> day_22();
+    std::pair<long long, long long> day_23();
+    std::pair<long long, long long> day_24();
+    std::pair<long long, long long> day_25();
 } 

@@ -5,21 +5,23 @@ using namespace std;
 using namespace aoc23;
 
 vector<pair<int, int>> parse_races(vector<string>);
-void task_1(vector<pair<int, int>>);
-void task_2(pair<long long, long long>);
+long long task_1(vector<pair<int, int>>);
+long long task_2(pair<long long, long long>);
 pair<long long, long long> merge_races(vector<pair<int, int>>);
 long long get_number_of_results(pair<long long, long long>);
 
-void aoc23::day_6() {
+pair<long long, long long> aoc23::day_6() {
     vector<string> lines = read_file("resources/input_6.txt", true);
 
     vector<pair<int, int>> races = parse_races(lines);
 
-    task_1(races);
+    long long t1a = task_1(races);
 
     pair<long long, long long> big_race = merge_races(races);
 
-    task_2(big_race);
+    long long t2a = task_2(big_race);
+
+    return { t1a, t2a };
 }
 
 vector<pair<int, int>> parse_races(vector<string> lines)
@@ -57,7 +59,7 @@ pair<long long, long long> merge_races(vector<pair<int, int>> races)
     return { stoll(time_str), stoll(distance_str) };
 }
 
-void task_1(vector<pair<int, int>> races)
+long long task_1(vector<pair<int, int>> races)
 {
     // Algorithm: parse from start till first successful, mark it
     // parse from end till first successful, mark it: all between the two marked numbers are valid
@@ -68,14 +70,14 @@ void task_1(vector<pair<int, int>> races)
         multiplier *= get_number_of_results(race);
     }
 
-    cout << "\tTask 1: number is " << multiplier << endl;
-    
+    return multiplier;
 }
 
-void task_2(pair<long long, long long> race)
+long long task_2(pair<long long, long long> race)
 {
     long long num_res =  get_number_of_results(race);
-    cout << "\tTask 2: number is " << num_res << endl;
+    
+    return num_res;
 }
 
 long long get_number_of_results(pair<long long, long long> race)

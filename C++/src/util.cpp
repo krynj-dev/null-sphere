@@ -4,40 +4,6 @@
 using namespace aoc23;
 using namespace std;
 
-void aoc23::run_day(int day)
-{
-    std::cout << "Running day " << day << std::endl;
-    switch (day)
-    {
-    case 1:
-        day_1();
-        break;
-    case 2:
-        day_2();
-        break;
-    case 3:
-        day_3();
-        break;
-    case 4:
-        day_4();
-        break;
-    case 5:
-        day_5();
-        break;
-    case 6:
-        day_6();
-        break;
-    case 7:
-        day_7();
-        break;
-    case 8:
-        day_8();
-        break;
-    default:
-        break;
-    }
-}
-
 std::vector<std::string> aoc23::read_file(const std::string &filename, const bool strip_newline)
 {
     std::vector<std::string> lines;

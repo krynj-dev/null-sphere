@@ -1,6 +1,9 @@
 #include <advent.h>
 #include <util.h>
 
+using namespace std;
+using namespace aoc23;
+
 size_t task_one_filter(const string &line, const char *, const size_t &offset);
 size_t task_two_filter(const string &line, const char *, const size_t &offset);
 vector<string> parse_schematic(std::vector<std::string> &lines, char *,
@@ -10,7 +13,7 @@ void eval_symbol(const size_t x, const size_t y, const size_t row_width, const s
     std::vector<std::string> lines, vector<string> &part_numbers, vector<vector<size_t>> &aux, bool ignore_duplicates,
     map<pair<size_t, size_t>, vector<string>> &symbol_part_map);
 
-void aoc23::day_3()
+pair<long long, long long> aoc23::day_3()
 {
     std::vector<std::string> lines = read_file("resources/input_3.txt", true);
     // Strip newline
@@ -19,18 +22,17 @@ void aoc23::day_3()
         lines[i] = lines[i].erase(lines[i].find_last_not_of("\r\n") + 1, lines[i].size());
     }
 
+    // Task 1
     char *non_symbols = "0123456789.";
     map<pair<size_t, size_t>, vector<string>> symbol_part_map_t1;
     vector<string> part_numbers = parse_schematic(lines, non_symbols, &task_one_filter, true, symbol_part_map_t1);
-
-    // Get sum
     int total = 0;
     for (string s: part_numbers)
     {
         total += stoi(s);
     }
-    cout << "\tTask 1: total is " << total << endl;
 
+    // Task 2
     char* only_asterisk = "*";
     map<pair<size_t, size_t>, vector<string>> symbol_part_map_t2;
     vector<string> t2 = parse_schematic(lines, only_asterisk, &task_two_filter, false, symbol_part_map_t2);
@@ -41,7 +43,8 @@ void aoc23::day_3()
             total2 += stoi(pair.second[0]) * stoi(pair.second[1]);
         }
     }
-    cout << "\tTask 2: total is " << total2 << endl;
+
+    return { total, total2 };
 }
 
 vector<string> parse_schematic(std::vector<std::string> &lines, char *symbol_set,

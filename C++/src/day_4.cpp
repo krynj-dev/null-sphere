@@ -9,7 +9,7 @@ int score(vector<int>);
 vector<int> parse_numbers(string);
 int cards_count(vector<vector<int>>);
 
-void aoc23::day_4()
+pair<long long, long long> aoc23::day_4()
 {
     vector<string> lines = read_file("resources/input_4.txt", true);
 
@@ -26,11 +26,11 @@ void aoc23::day_4()
     {
         score_total += score(matches);
     }
-    cout << "\tTask 1: total is " << score_total << endl;
 
     // Task 2
     int x = cards_count(game_matches);
-    cout << "\tTask 2: total is " << x << endl;
+
+    return { score_total, x };
 
 }
 

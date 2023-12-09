@@ -19,26 +19,24 @@ public:
 
 almanac parse_lines(vector<string>);
 long long map_it(long long, vector<tuple<long long, long long, long long>>);
-void task_1(almanac);
-void task_2(almanac);
+long long task_1(almanac);
+long long task_2(almanac);
 vector<pair<long long, long long>> split_ranges(pair<long long, long long>, vector<tuple<long long, long long, long long>>);
 vector<tuple<long long, long long, long long>>::iterator get_range(long long, vector<tuple<long long, long long, long long>> &);
 string tuple_string(tuple<long long, long long, long long>);
 string pair_string(pair<long long, long long>);
 vector<vector<tuple<long long, long long, long long>>> mapper_map(almanac);
 
-void aoc23::day_5()
+pair<long long, long long> aoc23::day_5()
 {
     vector<string> lines = read_file("resources/input_5.txt", true);
 
     almanac al = parse_lines(lines);
 
-    task_1(al);
-
-    task_2(al);
+    return { task_1(al), task_2(al) };
 }
 
-void task_1(almanac al)
+long long task_1(almanac al)
 {
     vector<long long> locs;
     for (long long s : al.seeds)
@@ -54,7 +52,8 @@ void task_1(almanac al)
             lowest = loc;
         }
     }
-    cout << "\tTask 1: lowest is " << lowest << endl;
+
+    return lowest;
 }
 
 almanac parse_lines(vector<string> lines)
@@ -144,7 +143,7 @@ long long map_it(long long x, vector<tuple<long long, long long, long long>> map
     return y;
 }
 
-void task_2(almanac al)
+long long task_2(almanac al)
 {
     // create seed range pairs
     vector<pair<long long, long long>> seed_pairs;
@@ -192,7 +191,7 @@ void task_2(almanac al)
         }
     }
 
-    cout << "\tTask 2: lowest is " << lowest << endl;
+    return lowest;
 }
 
 vector<pair<long long, long long>> split_ranges(pair<long long, long long> x, vector<tuple<long long, long long, long long>> mapper)

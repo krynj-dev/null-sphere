@@ -22,7 +22,7 @@ enum Card
     ACE
 };
 
-void task(vector<pair<vector<Card>, int>>, bool);
+long long task(vector<pair<vector<Card>, int>>, bool);
 
 vector<pair<vector<Card>, int>> parse_hands(vector<string>, bool);
 bool compare_hand(vector<Card>, vector<Card>, bool);
@@ -31,20 +31,18 @@ Card card_from_char(char, bool);
 int hand_type(vector<Card>, bool);
 string hand_to_string(vector<Card>);
 
-void aoc23::day_7()
+pair<long long, long long> aoc23::day_7()
 {
     vector<string> lines = read_file("resources/input_7.txt", true);
 
     vector<pair<vector<Card>, int>> hands_1 = parse_hands(lines, false);
 
-    task(hands_1, false);
-
     vector<pair<vector<Card>, int>> hands_2 = parse_hands(lines, true);
 
-    task(hands_2, true);
+    return { task(hands_1, false), task(hands_2, true) };
 }
 
-void task(vector<pair<vector<Card>, int>> hands, bool joker)
+long long task(vector<pair<vector<Card>, int>> hands, bool joker)
 {
     // Put stuff here
 
@@ -59,16 +57,11 @@ void task(vector<pair<vector<Card>, int>> hands, bool joker)
     {
         int rank = hands.size() - i;
         pair<vector<Card>, int> hand = hands[i];
-        // if (i < 100)
-        // {
-        //     int ht = hand_type(hand.first, joker);
-        //     cout << hand_to_string(hand.first) << "\t" << hand.second << '\t' << ht << endl;
-        // }
 
         total += (rank * hand.second);
     }
 
-    cout << "\tTask " << (joker ? "2" : "1") << ":  " << total << endl;
+    return total;
 }
 
 vector<pair<vector<Card>, int>> parse_hands(vector<string> lines, bool joker)

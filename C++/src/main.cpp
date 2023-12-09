@@ -18,6 +18,7 @@ int main(int argc, char* argv[]) {
     print_day(6, day_6());
     print_day(7, day_7());
     print_day(8, day_8());
+    print_day(9, day_9());
 
     return 0;
 }

@@ -51,7 +51,7 @@ std::vector<std::string> aoc23::split_string(std::string s, std::string delimite
 std::vector<long long> aoc23::parse_numbers(std::string line)
 {
     vector<long long> numbers;
-    std::regex nums(" *[0-9]+");
+    std::regex nums(" *-{0,1}[0-9]+");
     for (std::sregex_iterator i = std::sregex_iterator(line.begin(), line.end(), nums);
          i != std::sregex_iterator();
          ++i)

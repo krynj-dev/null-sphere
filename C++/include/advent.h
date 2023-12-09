@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <memory>
 #include <tuple>
+#include <numeric>
 
 namespace aoc23
 {

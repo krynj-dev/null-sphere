@@ -36,3 +36,6 @@
 
 # Make
 bin/
+
+# Puzzle inputs
+resources/

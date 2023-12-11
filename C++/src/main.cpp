@@ -20,11 +20,12 @@ int main(int argc, char* argv[]) {
     print_day(8, day_8());
     print_day(9, day_9());
     print_day(10, day_10());
+    print_day(11, day_11());
 
     return 0;
 }
 
 void print_day(size_t i, pair<long long, long long> answer)
 {
-    printf("Day %i:\tTask 1 = %12i, Task 2 = %12i\n", i, answer.first, answer.second);
+    printf("Day %i:\tTask 1 = %15ld, Task 2 = %15ld\n", i, answer.first, answer.second);
 }

@@ -10,6 +10,7 @@
 #include <memory>
 #include <tuple>
 #include <numeric>
+#include <stdlib.h> 
 
 namespace aoc23
 {

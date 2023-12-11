@@ -4,106 +4,75 @@
 using namespace std;
 using namespace aoc23;
 
-std::regex get_task_1_regex();
-std::regex get_task_2_regex();
-std::string digits_from_line(std::string line, bool include_written_numbers);
-int get_total(std::vector<string> lines, bool include_written_numbers);
-int number_from_first_last_digits(std::string digit_line);
+namespace day_1
+{
+    long long task_1(vector<string>);
+    long long task_2(vector<string>);
+}
+
+int num_from_line(string line, bool);
 
 pair<long long, long long> aoc23::day_1()
 {
-    std::vector<std::string> lines = aoc23::read_file("resources/input_1.txt", false);
+    vector<string> lines = read_file("resources/input_1.txt", true);
 
-    int total_task_1 = get_total(lines, false);
+    long long task_1_answer = day_1::task_1(lines);
 
-    int total_task_2 = get_total(lines, true);
+    long long task_2_answer = day_1::task_2(lines);
 
-    return { total_task_1, total_task_2 };
+    return {task_1_answer, task_2_answer};
 }
 
-std::string digits_from_line(std::string line, bool include_written_numbers)
+long long day_1::task_1(vector<string> lines)
 {
-    std::string line_cpy = line;
-    std::regex regex;
-
-    if (include_written_numbers)
-    {
-        regex = std::regex("(?=([0-9]|one|two|three|four|five|six|seven|eight|nine)).");
-    }
-    else
-    {
-        regex = std::regex("[0-9]");
-    }
-
-    std::string number_string = "";
-
-    auto digits_start = std::sregex_iterator(line_cpy.begin(), line_cpy.end(), regex);
-    auto digits_end = std::sregex_iterator();
-
-    for (std::sregex_iterator i = digits_start; i != digits_end; ++i)
-    {
-        std::smatch match = *i;
-        std::string match_str;
-        if (include_written_numbers)
-        {
-            match_str = match.str(1);
-        }
-        else
-        {
-            match_str = match.str();
-        }
-        number_string += match_str;
-    }
-
-    if (include_written_numbers)
-    {
-        number_string = std::regex_replace(number_string, std::regex("one"), "1");
-        number_string = std::regex_replace(number_string, std::regex("two"), "2");
-        number_string = std::regex_replace(number_string, std::regex("three"), "3");
-        number_string = std::regex_replace(number_string, std::regex("four"), "4");
-        number_string = std::regex_replace(number_string, std::regex("five"), "5");
-        number_string = std::regex_replace(number_string, std::regex("six"), "6");
-        number_string = std::regex_replace(number_string, std::regex("seven"), "7");
-        number_string = std::regex_replace(number_string, std::regex("eight"), "8");
-        number_string = std::regex_replace(number_string, std::regex("nine"), "9");
-    }
-
-    return number_string;
+    return accumulate(lines.begin(), lines.end(), 0, [](int acc, string line)
+                      { return acc + num_from_line(line, false); });
 }
 
-int number_from_first_last_digits(std::string digit_line)
+long long day_1::task_2(vector<string> lines)
 {
-    if (digit_line.size() > 0)
-    {
-        std::string digit_first(1, digit_line[0]);
-        std::string digit_last(1, digit_line[digit_line.size() - 1]);
-        return stoi(digit_first + digit_last);
-    }
-    else
-    {
-        return 0;
-    }
+    return accumulate(lines.begin(), lines.end(), 0, [](int acc, string line)
+                      { return acc + num_from_line(line, true); });
 }
 
-int get_total(std::vector<string> lines, bool include_written_numbers)
+int num_from_line(string line, bool include_number_words)
 {
-    std::vector<int> calibration_values = {};
-
-    for (int i = 0; i < lines.size(); i++)
+    string number_string = "";
+    map<string, char> number_words =
+        {{"one", '1'}, {"two", '2'}, {"three", '3'}, {"four", '4'}, {"five", '5'}, {"six", '6'}, {"seven", '7'}, {"eight", '8'}, {"nine", '9'}};
+    size_t first_digit_loc = line.find_first_of("0123456789");
+    char digit_tens = line[first_digit_loc];
+    if (include_number_words)
     {
-        std::string digits = digits_from_line(lines[i], include_written_numbers);
-        if (digits.size() > 0)
+        pair<char, size_t> num = {digit_tens, first_digit_loc};
+        for (auto it = number_words.begin(); it != number_words.end(); ++it)
         {
-            int cal_val = number_from_first_last_digits(digits);
-            calibration_values.push_back(cal_val);
+            auto pos = line.find(it->first);
+            if (pos < num.second)
+            {
+                num = {it->second, pos};
+            }
         }
+        digit_tens = num.first;
+        first_digit_loc = num.second;
     }
-
-    int total = 0;
-    for (const int &value : calibration_values)
+    size_t second_digit_loc = line.find_last_of("0123456789");
+    char digit_ones = line[second_digit_loc];
+    if (include_number_words)
     {
-        total += value;
+        pair<char, size_t> num = {digit_ones, second_digit_loc};
+        for (auto it = number_words.begin(); it != number_words.end(); ++it)
+        {
+            auto pos = line.rfind(it->first);
+            if (pos > num.second && pos != string::npos)
+            {
+                num = {it->second, pos};
+            }
+        }
+        digit_ones = num.first;
+        second_digit_loc = num.second;
     }
-
-    return total;
+    number_string += digit_tens;
+    number_string += digit_ones;
+    return stoi(number_string);
 }

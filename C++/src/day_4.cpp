@@ -63,14 +63,7 @@ vector<int> matching_numbers(string game_line)
 
 int score(vector<int> matching_numbers)
 {
-    if (matching_numbers.size() == 0)
-    {
-        return 0;
-    }
-    else
-    {
-        return 1 << (matching_numbers.size() - 1);
-    }
+    return matching_numbers.size() > 0 ? (1 << (matching_numbers.size() - 1)) : 0;
 }
 
 void card_number(size_t game_no, size_t &card_count, vector<vector<int>> game_matches)

@@ -4,130 +4,74 @@
 using namespace std;
 using namespace aoc23;
 
-std::map<std::string, std::vector<std::map<std::string, int>>> parse_games(std::vector<std::string> lines);
-std::vector<string> valid_games(std::map<std::string, std::vector<std::map<std::string, int>>> games,
-                                std::map<std::string, int> colour_limits);
-std::map<std::string, std::map<std::string, int>> minimum_set(std::map<std::string, std::vector<std::map<std::string, int>>> games);
-int power(std::map<std::string, int> min_game);
+vector<map<string, vector<int>>> parse_games(std::vector<std::string>);
+int valid_games(vector<map<string, vector<int>>>, map<string, int>);
+int power(vector<map<string, vector<int>>>);
 
 pair<long long, long long> aoc23::day_2()
 {
     std::vector<std::string> lines = read_file("resources/input_2.txt", false);
-    map<string, vector<map<string, int>>> games = parse_games(lines);
+    vector<map<string, vector<int>>> games = parse_games(lines);
 
     // Task 1
-    map<string, int> limit({{"red", 12},
-                            {"green", 13},
-                            {"blue", 14}});
-    vector<string> valid = valid_games(games, limit);
-    int id_sum = 0;
-    for (vector<string>::iterator it = valid.begin(); it != valid.end(); it++)
-    {
-        id_sum += stoi(split_string(*it, " ")[1]);
-    }
+    map<string, int> limit({{"red", 12}, {"green", 13}, {"blue", 14}});
+    int id_sum = valid_games(games, limit);
 
     // Task 2
-    std::map<std::string, std::map<std::string, int>> min_set = minimum_set(games);
-    int power_sum = 0;
-    for (map<string, map<string, int>>::iterator it = min_set.begin(); it != min_set.end(); it++)
-    {
-        power_sum += power(it->second);
-    }
+    int power_sum = power(games);
 
-    return { id_sum, power_sum };
+    return {id_sum, power_sum};
 }
 
-std::map<std::string, std::vector<std::map<std::string, int>>> parse_games(std::vector<std::string> lines)
+vector<map<string, vector<int>>> parse_games(vector<string> lines)
 {
     // Initialise map
-    std::map<std::string, std::vector<std::map<std::string, int>>> game_map;
-    for (vector<string>::iterator it = lines.begin(); it != lines.end(); it++)
+    vector<map<string, vector<int>>> game_map;
+    for (string line : lines)
     {
-        // Split Game name from turns
-        vector<string> game_split = split_string(*it, ": ");
-        // Split turns
-        vector<string> turn_split = split_string(game_split[1], "; ");
-        // Map turns
-        std::vector<std::map<std::string, int>> game_turns;
-        for (vector<string>::iterator turn_it = turn_split.begin(); turn_it != turn_split.end(); turn_it++)
+        map<string, vector<int>> game;
+        for (string turn : split_string(split_string(line, ": ")[1], "; "))
         {
-            map<string, int> turn_map;
-            vector<string> colour_split = split_string(*turn_it, ", ");
-            for (vector<string>::iterator colour_it = colour_split.begin(); colour_it != colour_split.end(); colour_it++)
+            for (string col : split_string(turn, ", "))
             {
-                vector<string> count_split = split_string(*colour_it, " ");
-                if (turn_map.find(count_split[1]) != turn_map.end())
-                {
-                    turn_map.insert({count_split[1], stoi(count_split[0])});
-                }
-                else
-                {
-                    turn_map[count_split[1]] = turn_map[count_split[1]] + stoi(count_split[0]);
-                }
+                vector<string> num_col = split_string(col, " ");
+                game[num_col[1]].push_back(stoi(num_col[0]));
             }
-            game_turns.push_back(turn_map);
         }
-        game_map.insert({game_split[0], game_turns});
+        game_map.push_back(game);
     }
     return game_map;
 }
 
-std::vector<string> valid_games(std::map<std::string, std::vector<std::map<std::string, int>>> games,
-                                std::map<std::string, int> colour_limits)
+int power(vector<map<string, vector<int>>> games)
 {
-    std::vector<string> valid_vector;
-    for (map<string, vector<map<string, int>>>::iterator it = games.begin(); it != games.end(); it++)
+    int x = 0;
+    for (size_t i = 0; i < games.size(); ++i)
     {
+        auto game = games[i];
+        int max_red = game.find("red") != game.end() ? *max_element(game["red"].begin(), game["red"].end()) : 1;
+        int max_blue = game.find("blue") != game.end() ? *max_element(game["blue"].begin(), game["blue"].end()) : 1;
+        int max_green = game.find("green") != game.end() ? *max_element(game["green"].begin(), game["green"].end()) : 1;
+        x += (max_red * max_blue * max_green);
+    }
+    return x;
+}
+
+int valid_games(vector<map<string, vector<int>>> games, map<string, int> limit)
+{
+    int x = 0;
+    for (size_t i = 0; i < games.size(); ++i)
+    {
+        auto game = games[i];
         bool valid = true;
-        vector<map<string, int>> turns = it->second;
-        for (vector<map<string, int>>::iterator turn_it = turns.begin(); turn_it != turns.end(); turn_it++)
+        for (auto &kv : limit)
         {
-            map<string, int> turn = *turn_it;
-            for (map<string, int>::iterator limit_it = colour_limits.begin(); limit_it != colour_limits.end(); limit_it++)
+            if (game.find(kv.first) != game.end() && *max_element(game[kv.first].begin(), game[kv.first].end()) > kv.second)
             {
-                if (turn.find(limit_it->first) != turn.end() && turn[limit_it->first] > limit_it->second)
-                {
-                    valid = false;
-                }
+                valid = false;
             }
         }
-        if (valid)
-        {
-            valid_vector.push_back(it->first);
-        }
+        x += (valid ? i + 1 : 0);
     }
-    return valid_vector;
-}
-
-std::map<std::string, std::map<std::string, int>> minimum_set(std::map<std::string, std::vector<std::map<std::string, int>>> games)
-{
-    std::map<std::string, std::map<string, int>> min_set;
-    for (map<string, vector<map<string, int>>>::iterator it = games.begin(); it != games.end(); it++)
-    {
-        std::map<string, int> min_map;
-        for (vector<map<string, int>>::iterator turn_it = it->second.begin(); turn_it != it->second.end(); turn_it++)
-        {
-            for (map<string, int>::iterator colour_it = turn_it->begin(); colour_it != turn_it->end(); colour_it++)
-            {
-                string colour = colour_it->first;
-                int count = colour_it->second;
-                if (min_map.find(colour) == min_map.end() || (min_map.find(colour) != min_map.end() && min_map[colour] < count))
-                {
-                    min_map[colour] = count;
-                }
-            }
-        }
-        min_set.insert({it->first, min_map});
-    }
-    return min_set;
-}
-
-int power(std::map<std::string, int> cube_set)
-{
-    int power = 1;
-    for (std::map<std::string, int>::iterator it = cube_set.begin(); it != cube_set.end(); it++)
-    {
-        power *= it->second;
-    }
-    return power;
+    return x;
 }

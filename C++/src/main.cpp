@@ -22,6 +22,7 @@ int main(int argc, char* argv[]) {
     print_day(10, day_10());
     print_day(11, day_11());
     print_day(12, day_12());
+    print_day(13, day_13());
 
     return 0;
 }

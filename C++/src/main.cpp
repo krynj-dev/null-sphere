@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
     print_day(12, day_12());
     print_day(13, day_13());
     print_day(14, day_14());
+    print_day(15, day_15());
 
     return 0;
 }
